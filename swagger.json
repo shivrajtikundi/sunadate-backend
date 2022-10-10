@@ -1,0 +1,1554 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Cupreous Dating App"
+    },
+    "host": "http://54.152.239.30/:9118",
+    "basePath": "/",
+    "paths": {
+        "/user/register": {
+            "post": {
+                "tags": ["user"],
+                "summary": "This is to Register A New user",
+                "description": "This for registering the initial User.",
+                "operationId": "registerUser",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "tags": ["user"],
+                "summary": "Logs user into the system",
+                "description": "This for User Login",
+                "operationId": "login",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "login",
+                        "description": "request body for login",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
+                    }                    
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "headers": {
+                            "X-Rate-Limit": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "calls per hour allowed by the user"
+                            },
+                            "X-Expires-After": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "date in UTC when token expires"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email/password supplied"
+                    }
+                }
+            }
+        },
+        "/user/logout": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Logs out current logged in user session",
+                "description": "API for Loging Out",
+                "operationId": "logout",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "The email for login",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/user/updateuser/{id}": {
+            "put": {
+                "tags": ["user"],
+                "summary": "Update user",
+                "description": "API for updating user information only for logged in Users.",
+                "operationId": "updateUser",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "name that need to be updated",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Updated user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/user/user/{id}": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Get user by id",
+                "description": "API for getting a User by userId",
+                "operationId": "getUserByName",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The name that needs to be fetched. Use user1 for testing. ",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/user/filterusers": {
+            "post": {
+                "tags": ["user"],
+                "summary": "For filetering user based on multiple parameters",
+                "description": "API for getting a User by userId",
+                "operationId": "getUserByName",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "For filtering users according to given parameters",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/FilterUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Users"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Parameter supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/user/forgot": {
+            "post": {
+                "tags": ["user"],
+                "summary": "This is to Recover Forgotten Password",
+                "description": "API for getting forgotten Password.",
+                "operationId": "forgotPassword",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "email",
+                        "description": "Created user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ForgotPassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/password/reset/{token}": {
+            "put": {
+                "tags": ["user"],
+                "summary": "Reset user Password",
+                "description": "API for updating user changing password only for logged in Users.",
+                "operationId": "updateUser",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Updated user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ResetPassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ResetPassword_Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/sendOtp": {
+            "get": {
+                "tags": ["verifyProfile"],
+                "summary": "This is api endpoint to send an otp",
+                "description": "This for verify profile from the server using with mobile number",
+                "operationId": "verifyProfile",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "mobile number with country code",
+                        "description": "Created user object",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "channel",
+                        "description": "Created user object",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "otp  sent"
+                    }
+                }
+            }
+        },
+        "/user/verifyOtp": {
+            "get": {
+                "tags": ["verifyProfile"],
+                "summary": "This is api endpoint to verify an otp",
+                "description": "This for verify profile from the server using with mobile number",
+                "operationId": "verifyProfile",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "mobile number with country code",
+                        "description": "Created user object",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "code",
+                        "description": "Created user object",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "verified  otp"
+                    }
+                }
+            }
+        },
+        "/user/question": {
+            "post": {
+                "tags": ["questionarieApi"],
+                "summary": "Create questions",
+                "description": "This can only be done by the logged in user.",
+                "operationId": "createQuestions",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/questions"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/user/question/{id}": {
+            "put": {
+                "tags": ["questionarieApi"],
+                "summary": "Update questions",
+                "description": "This can only be done by the logged in user.",
+                "operationId": "updateQuestion",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "questions that need to be updated",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Updated user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/updateQuestion"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "Questions not found"
+                    }
+                }
+            },
+            "delete":{
+                "tags": ["questionarieApi"],
+                "summary": "Delete questions",
+                "description": "This can only be done by the logged in user.",
+                "operationId": "delete",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "question that need to be delete",
+                        "required": true,
+                        "type": "string"
+                    }                    
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "Questions not found"
+                    }
+                }
+            }
+        },
+        "/user/answer": {
+            "post": {
+                "tags": ["AnswerAPI"],
+                "summary": "To Create Answets",
+                "description": "This can only be done by the logged in user.",
+                "operationId": "createAnswers",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/questions"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/user/answer/{id}":{
+            "get":{
+                "tags": ["AnswerAPI"],
+                "summary": "Get Answer by id",
+                "description": "API for getting a Answer by id",
+                "operationId": "getUserByName",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of a question To get Answer",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {}
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "put":{
+                "tags": ["AnswerAPI"],
+                "summary": "Update Answer",
+                "description": "Work in Progress",
+                "operationId": "updateAnser",
+                "produces": ["application/json"],
+                "parameters": [
+                    
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of answer that need to be updated",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "delete":{
+                "tags": ["AnswerAPI"],
+                "summary": "Delete Answer",
+                "description": "To delete an Answer This can only be done by the logged in user.",
+                "operationId": "deleteAnswer",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of an Answer that need to be delete",
+                        "required": true,
+                        "type": "string"
+                    }                    
+                ],
+                "responses": {
+                    "200":{
+                        "message": "Answer Deleted successfully"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "Questions not found"
+                    }
+                }
+            }
+        },
+        "/user/uploadimage": {
+            "get": {
+                "tags": ["UserGalleryfiles"],
+                "summary": "This is api upload an image",
+                "description": "This for upload an gallery image",
+                "operationId": "UserGalleryfiles",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "form/data",
+                        "name": "image should be in file format",
+                        "description": "Created user object",
+                        "required": true
+                    },
+                    {
+                        "in": "body",
+                        "name": "userid",
+                        "description": "Created user object",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "image Added Successfully"
+                    },
+                    "401": {
+                        "description": "An error Occured!"
+                    }
+                }
+            }
+        },
+        "/user/uploadvideo": {
+            "get": {
+                "tags": ["UserGalleryfiles"],
+                "summary": "This is api upload an video",
+                "description": "This for upload an gallery video",
+                "operationId": "UserGalleryfiles",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "form/data",
+                        "name": "video",
+                        "description": "Created user object",
+                        "required": true
+                    },
+                    {
+                        "in": "body",
+                        "name": "userid",
+                        "description": "Created user object",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "video Added Successfully"
+                    },
+                    "401": {
+                        "description": "An error Occured!"
+                    }
+                }
+            }
+        },
+        "/user/getlikes/{id}": {
+            "get": {
+                "tags": ["Likes"],
+                "summary": "To get the likes Per User",
+                "description": "API for Getting the likes per User",
+                "operationId": "likes",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of User to get Likes",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Users"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/like": {
+            "post": {
+                "tags": ["Likes"],
+                "summary": "To Like a user",
+                "description": "This for User Login",
+                "operationId": "like",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "like",
+                        "in": "body",
+                        "description": "To pass a like from one user To another User",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Like_Post"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email/password supplied"
+                    },
+                    "406": {
+                        "description": "Something Went Wrong"
+                    }
+                }
+            }
+        },
+        "/user/friendrequest": {
+            "post": {
+                "tags": ["FriendRequest"],
+                "summary": "To Like a user",
+                "description": "This for User Login",
+                "operationId": "like",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "like",
+                        "in": "body",
+                        "description": "To pass a like from one user To another User",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Friend_Request_Post"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email/password supplied"
+                    },
+                    "406": {
+                        "description": "Something Went Wrong"
+                    }
+                }
+            }
+        },
+        "/user/getfriendrequest/{id}": {
+            "get": {
+                "tags": ["FriendRequest"],
+                "summary": "To get the list of Friend Requests Per User",
+                "description": "API for Getting the Friend Requests per User",
+                "operationId": "likes",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of User to get Friend Requests",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Users"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/updateRequest/{id}":{
+            "put": {
+                "tags": ["FriendRequest"],
+                "summary": "To Update Friend Request",
+                "description": "API for updating Sent Friend Request.",
+                "operationId": "updateFriendRequest",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of User To Sent Request",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Updated user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Update_Friend_Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Update_Friend_Request_Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/rtctoken":{
+            "post": {
+                "tags": ["UserCommunication"],
+                "summary": "This is to get rtctoken of from agora services for Audion or Video Calls as Required.",
+                "description": "This for User Communication.",
+                "operationId": "rtctoken",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "for Audio Call use 'A' and for Video Call use 'V' in callType ",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Rtc_Token_Post"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Rtc_Token_Post_Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/getCallToken/{id}":{
+            "get": {
+                "tags": ["UserCommunication"],
+                "summary": "To get the Call Tokens if another user is got any call",
+                "description": "API for get Receving Call Tokens",
+                "operationId": "getReceivingCall Tokens",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of a  user to check if got any incoming Video or Audio Call",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GetCallTokens_Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/user/getCallHistory/{id}":{
+            "get": {
+                "tags": ["UserCommunication"],
+                "summary": "To get the call history of user",
+                "description": "API for geting call history",
+                "operationId": "getCallHistory",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of a  user to Call History",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GetCallHistory_Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/user/getChatHistory/{userId1}/{userId2}":{
+            "get": {
+                "tags": ["UserCommunication"],
+                "summary": "To get the chat history of user",
+                "description": "API for geting chat history",
+                "operationId": "getChatHistory",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name1": "userId1",
+                        "in": "path",
+                        "description": "userId1 and userId2 for a chat hisotry",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name2": "userId2",
+                        "in": "path",
+                        "description": "userId2 for a chat hisotry",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GetChatHistory_Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/payment/getProducts":{
+            "get": {
+                "tags": ["PaymentGateWay"],
+                "summary": "To Get all the Products and Plans",
+                "description": "API for getting Plans and Products",
+                "operationId": "getProducts",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GET_PRODUCTS_RESPONSE"
+                        }
+                    },
+                    "400": {
+                        "description": "Something Went Wrong"
+                    }
+                }
+            }
+        },
+        "/payment/getSubscription/{id}":{
+            "get":{
+                "tags": ["PaymentGateWay"],
+                "summary": "Subscription Details by subscription id",
+                "description": "API for getting details of subscripton by subscriptionId",
+                "operationId": "getSubscription",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of a question To get Answer",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Get_Subscription_Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/payment/createCustomerSubscription":{
+            "post": {
+                "tags": ["PaymentGateWay"],
+                "summary": "To Create Subscription",
+                "description": "This for Creating Subscription",
+                "operationId": "Subscription",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "like",
+                        "in": "body",
+                        "description": "To pass a like from one user To another User",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Create_Subscription_Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email/password supplied"
+                    },
+                    "406": {
+                        "description": "Something Went Wrong"
+                    }
+                }
+            }
+        },
+        "/payment/createProduct":{
+            "post": {
+                "tags": ["PaymentGateWay"],
+                "summary": "To Create Product",
+                "description": "This to create Product",
+                "operationId": "createProduct",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "createProduct",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Create_Product_Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Create_Product_Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email/password supplied"
+                    },
+                    "406": {
+                        "description": "Something Went Wrong"
+                    }
+                }
+            }
+        },
+        "/payment/process":{
+            "post": {
+                "tags": ["PaymentGateWay"],
+                "summary": "To create payment api",
+                "description": "This to create payment",
+                "operationId": "createPayment",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "createProduct",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Create_Pyament_Process_Req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Create_Pyament_Process_Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email/password supplied"
+                    },
+                    "406": {
+                        "description": "Something Went Wrong"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "user",
+            "description": "Operations about user."
+        },
+        {
+            "name": "verifyProfile",
+            "description": "Operations about verify profle."
+        },
+        {
+            "name": "questionarieApi",
+            "description": "Operations on questions."
+        },
+        {
+            "name": "AnswerAPI",
+            "description": "Operations on Answers."
+        },
+        {
+            "name": "UserGalleryfiles",
+            "description": "Operations on Gallery."
+        },
+        {
+            "name": "Likes",
+            "description": "Operations on Likes."
+        },
+        {
+            "name": "FriendRequest",
+            "description": "Operations on Friend Requests."
+        },
+        {
+            "name": "UserCommunication",
+            "description": "Operations for Audio and Video Call."
+        },
+        {
+            "name": "PaymentGateWay",
+            "description": "Operations on Payment."
+        }
+    ],
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "firstname": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "contactNo": {
+                    "type": "string"
+                },
+                "dateOfBirth": {
+                    "type": "string"
+                },
+                
+                "gender": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "string"
+                },
+               
+                "maritalStatus": {
+                    "type": "string"
+                },
+                "qualification": {
+                    "type": "string"
+                },
+                
+                "password": {
+                    "type": "String"
+                },
+                "confirmPassword": {
+                    "type": "string"
+                },
+                
+                "ethnicity": {
+                    "type": "string"
+                }
+               
+            }
+        },
+        "Users": {
+            "type": "array",
+            "$ref": "#/definitions/User"
+        },
+        "Login":{
+            "type":"object",
+            "properties":{
+                "email":{
+                    "type":"string"
+                },
+                "password":{
+                    "type":"string"
+                }
+            }
+        },
+        "ForgotPassword": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type":"string"
+                }
+            }
+        },
+        "FilterUser": {
+            "type": "object",
+            "properties": {
+                "gender": {
+                    "type": "string",
+                    "required": false
+                },
+                "height": {
+                    "type": "string",
+                    "required": false
+                },
+                "religion": {
+                    "type": "string",
+                    "required": false
+                },
+                "maritalStatus": {
+                    "type": "string",
+                    "required": false
+                },
+                "qualification": {
+                    "type": "string",
+                    "required": false
+                },
+                "country": {
+                    "type": "string",
+                    "required": false
+                }
+            }
+        },
+        "ResetPassword": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "required": true
+                },
+                "confirmPassword": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        },
+        "ResetPassword_Response": {
+            "type": "object",
+            "properties": {
+                "User": {
+                    "$ref": "#/definitions/User"
+                },
+                "Success": true,
+                "token": "String"
+            }
+        },
+        "questions": {
+            "properties": {
+                "questionNo": {
+                    "type": "number"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/option"
+                    }                    
+                },
+                "subQuestions" : {
+                    "type":"array",
+                    "items": {
+                        "$ref": "#/definitions/subQuestion"
+                    }, 
+                    "required": false
+                },
+                "multiple": {
+                    "type": "boolean",
+                    "required": true
+                }
+            }
+        },
+        "option": 
+            {
+                "type": "string"
+            }
+        ,
+        "subQuestion":{
+            "properties":{
+            "question":
+            { 
+                "type":"string"
+            },
+            "options": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/option"
+                }                    
+            }
+        }
+        },
+        "updateQuestion": {
+            "type": "object",
+            "properties": {
+                "questionNo": {
+                    "type": "string"
+                }
+            }
+        },
+        "Like_Post":{
+            "type":"object",
+            "properties":{
+                "from_userid":{
+                    "type":"627a6ce336d0a478fcbcb789",
+                    "required":true
+                },
+                "to_userid":{
+                    "type":"627a6ce336d0a478fcbcb789",
+                    "required":true
+                }
+            }
+        },
+        "Friend_Request_Post":{
+            "type": "object",
+            "properties":{
+                "from_userid":{
+                    "type":"627a6ce336d0a478fcbcb789",
+                    "required":true
+                },
+                "to_userid":{
+                    "type":"627a6ce336d0a478fcbcb789",
+                    "required":true
+                }
+            }
+        },
+        "Update_Friend_Request":{},
+        "Update_Friend_Request_Response":{
+            "type":"object",
+            "properties":{
+                "message":{
+                    "type":"string"
+                },
+                "data":{}
+            }
+        },
+        "Rtc_Token_Post":{
+            "type":"object",
+            "properties":{
+                "to":{
+                    "type":"string",
+                    "required":true
+                },
+                "from": {
+                    "type":"string",
+                    "required":true
+                },
+                "callType":{
+                    "type":"string",
+                    "required":true
+                }
+            }
+        },
+        "Rtc_Token_Post_Response":{
+            "type":"object",
+            "properties":{
+                "channel":{
+                    "type":"string",
+                    "required":true
+                },
+                "token": {
+                    "type":"string",
+                    "required":true
+                },
+                "callType":{
+                    "type":"string",
+                    "required":true
+                }
+            }
+        },
+        "GetCallTokens_Response":{
+            "type":"object",
+            "properties":{
+                "channel":{
+                    "type":"string",
+                    "required":true
+                },
+                "token": {
+                    "type":"string",
+                    "required":true
+                },
+                "callType":{
+                    "type":"string",
+                    "required":true
+                }
+            }
+        },
+        "callMeta":{
+            "type":"object",
+            "properties":{
+                "to":{
+                    "type":"string",
+                    "required":true
+                },
+                "from": {
+                    "type":"string",
+                    "required":true
+                },
+                "callType":{
+                    "type":"string",
+                    "required":true
+                }
+            }
+        },
+        "GetCallHistory_Response":{
+            "type": "array",
+            "$ref": "#/definitions/callMeta"
+        },
+        "chatMeta":{
+            "type":"object",
+            "properties":{
+                "userId1":{
+                    "type":"string",
+                    "required":true
+                },
+                "userId2": {
+                    "type":"string",
+                    "required":true
+                },
+                "sender":{
+                    "type":"string",
+                    "required":true
+                },
+                "message":{
+                    "type":"string",
+                    "required":true
+                },
+                "received": {
+                    "type":true,
+                    "required":true
+                },
+                "time":{
+                    "type":"string",
+                    "required":true
+                }
+            }
+        },
+        "GetChatHistory_Response":{
+            "type": "array",
+            "$ref": "#/definitions/chatMeta"
+        },
+        "ProductsMeta":{
+            "id":"string",
+            "name":"string",
+            "active":false
+        },
+        "GET_PRODUCTS_RESPONSE":{
+            "type": "object",
+            "properties":{
+                "object":{
+                    "type":"string"
+                },
+                "data": {
+                    "type": "array",
+                    "$ref": "#/definitions/ProductsMeta"
+                },
+                "has_more":{
+                    "type":false
+                },
+                "url":{
+                    "type": "string"
+                }
+            }
+        },
+        "Create_Subscription_Request":{
+            "type":"object",
+            "properties":{
+                "customerEmail":{
+                    "type":"string",
+                    "required":true
+                },
+                "stripeToken": {
+                    "type":"string",
+                    "required":true
+                },
+                "planId":{
+                    "type":"string",
+                    "required":true
+                }
+            }
+        },
+        "GSR_DATA_META":{
+            "type":"object",
+            "properties":{
+                "id":{
+                    "type":"string"
+                },
+                "object":{
+                    "type":"string"
+                },
+                "metadata":{
+                    "type":"object"
+                },
+                "plan":{
+                    "type":"object"
+                },
+                "price":{
+                    "type":"object"
+                },
+                "subscription":{
+                    "type":"string"
+                },
+                "quantity":{
+                    "type":"integer"
+                }
+            }
+        },
+        "Get_Subscription_Response":{
+            "type":"object",
+            "properties":{
+                "subscription":{
+                    "type":"object",
+                    "properties":{
+                        "id":{
+                            "type":"string"
+                        },
+                        "items": {
+                            "type":"object",
+                            "properties":{
+                                "object":{
+                                    "type":"string"
+                                },
+                                "data":{
+                                    "type": "array",
+                                    "$ref": "#/definitions/GSR_DATA_META"
+                                }
+                            }
+                        }
+                    }
+                },
+                "plan":{
+                    "type":"object",
+                    "properties":{
+                        "id":{
+                            "type":"string"
+                        },
+                        "amount": {
+                            "type":"integer"
+                        },
+                        "active":{
+                            "type":false
+                        },
+                        "product": {
+                            "type":"string"
+                        },
+                        "currency":{
+                            "type":"string"
+                        }
+                    }
+                },
+                "status":{
+                    "type":"string"
+                },
+                "quantity":{
+                    "type":"integer"
+                },
+                "start_date":{
+                    "type":"integer"
+                }
+            }
+        },
+        "Create_Product_Request":{
+            "type":"object",
+            "properties":{
+                "name":{
+                    "type":"string"
+                },
+                "type":{
+                    "type":"string"
+                }
+            }
+        },
+        "Create_Product_Response":{
+            "type":"object",
+            "properties":{
+                "id":{
+                    "type":"string"
+                },
+                "active":{
+                    "type" : false
+                },
+                "name":{
+                    "type":"string"
+                },
+                "metadata":{
+                    "type":"object"
+                }
+            }
+        },
+        "Create_Pyament_Process_Req":{
+            "type":"object",
+            "properties":{
+                "amount":{
+                    "type":"integer"
+                }
+            }
+        },
+        "Create_Pyament_Process_Response":{
+            "type":"object",
+            "properties":{
+                "success":{
+                    "type":true
+                },
+                "client_secret":{
+                    "type":"string"
+                }
+            }
+        }
+    },
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"]
+}
